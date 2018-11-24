@@ -1,13 +1,13 @@
 const board1 = [
-    ['x', 'o', 'x'],
-    ['x', 'x', 'o'],
-    ['x', 'o', 'o']
+    ['o', 'o', 'o'],
+    ['o', 'o', 'o'],
+    ['o', 'o', 'o']
 ]
 
 const board2 = [
-    ['o', 'x', 'o'],
+    ['o', 'o', 'o'],
     ['o', 'o', 'x'],
-    ['o', 'x', 'x']
+    ['o', 'x', 'o']
 ]
 
 const moves = (board1, board2) => 
@@ -18,9 +18,3 @@ const moves = (board1, board2) =>
 
 console.log(moves(board1, board2))
 
-const colorRange = ['red', 'blue', 'green', 'yellow', 'magenta']
-            
-const color = colorRange[Math.floor(Math.random() * 5)]
-
-console.log(color)
-console.log(Math.floor(Math.random() * 5))

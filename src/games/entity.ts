@@ -1,28 +1,37 @@
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm'
 import { BaseEntity } from 'typeorm/repository/BaseEntity'
 
-type Color = string | 'red' | 'blue' | 'green' | 'yellow' | 'magenta'
+const colorRange = ['red', 'blue', 'green', 'yellow', 'magenta']
 
-// interface IColor {
-//     param: Color
-// }
-// const color = colorRange[Math.floor(Math.random() * 5)]
+const colorPicker = () => {
+    return colorRange[Math.floor(Math.random() * colorRange.length)]
+}
 
-// type Row = [ string, string, string ]
+type Board = [
+    [string, string, string],
+    [string, string, string],
+    [string, string, string]
+]
+
+const defaultBoard: Board = [
+    ['o', 'o', 'o'],
+    ['o', 'o', 'o'],
+    ['o', 'o', 'o']
+]
 
 @Entity()
 export default class Game extends BaseEntity {
 
-@PrimaryGeneratedColumn()
-id?: number
+    @PrimaryGeneratedColumn()
+    id?: number
 
-@Column('text', {nullable:false})
-name: string
+    @Column('text', { nullable: false })
+    name: string
 
-@Column('text') 
-color: Color
+    @Column('text')
+    color: string = colorPicker()
 
-@Column('json', {nullable:true})
-board: JSON
+    @Column('json', { default: defaultBoard })
+    board: Board
 
 }
