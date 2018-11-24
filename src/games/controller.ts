@@ -1,14 +1,6 @@
 import { JsonController, Get, Post, HttpCode, Body, Put, Param, NotFoundError, BadRequestError } from 'routing-controllers'
 import Game from './entity';
 
-const moves = (board1, board2) => 
-  board1
-    .map((row, y) => row.filter((cell, x) => board2[y][x] !== cell))
-    .reduce((a, b) => a.concat(b))
-    .length
-    
-const colorRange = ['red', 'blue', 'green', 'yellow', 'magenta']
-
 @JsonController()
 export default class GameController {
 
@@ -31,21 +23,30 @@ export default class GameController {
         @Param('id') id: number,
         @Body() update: Partial<Game>
     ) {
-        const { color, board } = update
+        const { color, board } = update        
         const game = await Game.findOne(id)
+        const moves = (board1, board2) => {
+            return (
+                board1
+                    .map((row, y) => row.filter((cell, x) => board2[y][x] !== cell))
+                    .reduce((a, b) => a.concat(b))
+                    .length
+            )
+        }            
+        const colorRange = ['red', 'blue', 'green', 'yellow', 'magenta']
+        //check if game exists
         if (!game) throw new NotFoundError('Game not found!')
-
+        //check if updated color is a valid color
         if (color) {
             if (!colorRange.includes(color)) throw new BadRequestError('Wrong color')
         }
-
+        //check if more than 1 move were made per request
         if (board) {
             if (moves(game.board, board) > 1) {
-                console.log(moves(game.board, board))
-                throw new BadRequestError('You can only make one move per one request')
-            }            
+                throw new BadRequestError('You can only make one move per time')
+            }
         }
-
+        //if all above conditions met, merge and save the new updates
         return Game.merge(game, update).save()
     }
 }
